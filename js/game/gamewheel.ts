@@ -45,15 +45,17 @@ module WheelOfFortune {
             // 3. apply the opposite to the groups's angle for presentation
             this.angle += this.segmentTheta * 0.5;
 
-            // debug
-            console.log("Game Wheel Created! Adjusted angle by " + (this.segmentTheta * 0.5));
+            // 4. listen to signals
+            Wheel.onSpinChange.add(this.onSpinHandler);
         }
 
         update() {
             super.update();
+        }
 
-            // debug
-            // console.log(this.currentValue());
+        private onSpinHandler(spinState:SpinState): void
+        {
+            console.log("signal received: "+ spinState.toString());
         }
 
         /**
@@ -72,7 +74,6 @@ module WheelOfFortune {
         public valueSegmentTheta(index: number): number {
             return (index * this.segmentTheta) + (this.segmentTheta * 0.5);
         }
-
 
         public landOnAngle(d: number): void {
             let w = this.velocityToReach(d);

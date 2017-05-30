@@ -1,5 +1,7 @@
 module WheelOfFortune {
 
+    export enum SpinState{ Stopped, Spinning }
+
     export class Wheel extends Phaser.Group
     {
 
@@ -7,40 +9,42 @@ module WheelOfFortune {
         public wheelSprite: Phaser.Sprite;
 
         // physics attributes of the wheel
-        static readonly MASS: number = 10;    // mass in Kgs
-        static readonly RADIUS: number = 2;     // radius in meters
+        static readonly MASS: number = 10;              // mass in Kgs
+        static readonly RADIUS: number = 2;             // radius in meters
+        static readonly IMPULSE_DEGREES: number = 45;   // how many degrees of spin will impulse be applied to
+        static readonly DRAG: number = -0.5;            // how much negative accelaration in radians / s^2
 
-        static readonly IMPULSE_DEGREES: number = 45;    // how many degrees of spin will impulse be applied to
-
-        static readonly DRAG: number = -0.5;    // how much negative accelaration in radians / s^2
-        //static readonly DRAG: number          = 20;    // amount of degrees/second lost every second after spinning
-
-        private rI: number =                              // rotational inertia (1/2 mass * r^2 :: for a cylinder)
+        private rI: number =                            // rotational inertia (1/2 mass * r^2 :: for a cylinder)
             (Wheel.MASS * 0.5) * (Wheel.RADIUS * Wheel.RADIUS);
 
-        private force: number = 0;     // tangent force in newtons
-        private torque: number = 0;     // torque - angular work (force * r * sin(90))
-        private angular_acceleration: number = 0;     // angular acceleration (torque * rotational inertia)
-        private angular_velocity: number = 0;     // angular velocity (angular_acceleration * t(seconds))
+        private force: number = 0;                      // tangent force in newtons
+        private torque: number = 0;                     // torque - angular work (force * r * sin(90))
+        private angular_acceleration: number = 0;       // angular acceleration (torque * rotational inertia)
+        private angular_velocity: number = 0;           // angular velocity (angular_acceleration * t(seconds))
 
+        private time_dilation: number = 1;              // value in which physics intervals are scaled
 
         // bookkeeping attributes
-        private total_theta: number = 0;    // how many radians has wheel spun;
-        private impulse_time: number = 0;    // how long has impulse ran
+        private target_coasting_time: number = 0;       // targeted coasting time after impulse
+        private actual_coasting_time: number = 0;       // actual coasting time after impulse
 
-        private target_coasting_time: number = 0;
-        private actual_coasting_time: number = 0;
+        // states and signals
+        static onSpinChange: Phaser.Signal = new Phaser.Signal();
 
+        private static _spinState: SpinState;
+        public static get spinState(): SpinState { return this._spinState; }
+        public static set spinState(value: SpinState) {
+            if(value == this.spinState)
+                return;
 
-        private time_dilation: number = 1;
-
-        // booleans
-        private isImpulsing: boolean = false; // are we impulsing?
+            this._spinState = value;
+            Wheel.onSpinChange.dispatch(value);
+        }
 
 
         // ######## constructor ########
         constructor(game: Phaser.Game, sprite: Phaser.Sprite) {
-            super(game)
+            super(game);
             this.wheelSprite = sprite;
             this.add(sprite);
         }
@@ -51,39 +55,32 @@ module WheelOfFortune {
 
             // 2. update angle of wheel
             this.updateAngle();
-
-
-            // 3. bookkeeping
-            /*if(this.isImpulsing == true)
-             this.impulse_time += this.game.time.elapsed / 1000;*/
-
-            // debug
-            //console.log(this.angle % 360);
-            //console.log(this.angular_acceleration);
         }
 
+        /**
+         * Calculate and the angle of the wheel
+         */
         private updateAngle(): void {
-            //console.log(this.game.time.physicsElapsed);
+
+            // 1. Update the angle of the wheel
             let theta: number = this.angular_velocity * this.game.time.physicsElapsed;
             this.angle += Phaser.Math.radToDeg(theta);
 
+            // 2. Bookkeeping
             if (this.target_coasting_time != 0) {
                 if (this.angular_velocity > 0)
                     this.actual_coasting_time += this.game.time.physicsElapsed;
                 else {
-                    //console.log("actual time elapsed: "+this.actual_coasting_time);
-                    //console.log("difference in time "+(this.target_coasting_time - this.actual_coasting_time));
                     this.actual_coasting_time = 0;
                     this.target_coasting_time = 0;
                 }
-
             }
         }
 
         /**
          * Apply angular impulse to the wheel for t seconds
-         * @param n : tangent force in newtons
-         * @param t : for how long in seconds
+         * @param n tangent force in newtons
+         * @param t for how long in seconds
          */
         public applySpin(n: number, t: number): void {
             console.log("apply " + n + " newtons for " + t + " seconds");
@@ -188,10 +185,9 @@ module WheelOfFortune {
 
                 this.time_dilation = this.target_coasting_time / c;
 
+                // debug
                 console.log("dilate time by: " + this.time_dilation);
             }
-
-            //console.log("remaining degrees: "+ this.remainingDegreesAfterImpulse());
         }
 
         /**
@@ -223,13 +219,17 @@ module WheelOfFortune {
          */
         private updateAngularVelocity(override?: number): void {
 
+            // 1. override angular velocity?
             if (override != undefined) {
                 this.angular_velocity = override;
                 return;
             }
 
+            // 2. are we accelerating?
             if (this.angular_acceleration != 0)
                 this.angular_velocity += this.angular_acceleration * this.game.time.physicsElapsed;
+
+            // 3. coast
             else {
                 let drag = Math.abs(Wheel.DRAG * (this.game.time.physicsElapsed * this.time_dilation));
 
@@ -243,28 +243,9 @@ module WheelOfFortune {
                     this.angular_velocity = 0;
                 }
             }
+
+            // 4. update spin state
+            Wheel.spinState = (this.angular_velocity > 0) ? SpinState.Spinning : SpinState.Stopped;
         }
-
-
-        private remainingDegreesAfterImpulse(): number {
-            let degrees_total = 0;
-            let degrees_v = Phaser.Math.radToDeg(this.angular_velocity);
-            let s = 0;
-            while (degrees_v > 0) {
-                degrees_total += degrees_v;
-                degrees_v -= Wheel.DRAG;
-                s++;
-            }
-
-            console.log("will take " + s + " seconds to stop");
-
-            return degrees_total;
-        }
-
-        private degressDuringImpulse(): number {
-            return 0; // temp
-        }
-
-
     }
 }

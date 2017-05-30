@@ -47,14 +47,15 @@ var WheelOfFortune;
             _this.wheelSprite.angle -= _this.segmentTheta * 0.5;
             // 3. apply the opposite to the groups's angle for presentation
             _this.angle += _this.segmentTheta * 0.5;
-            // debug
-            console.log("Game Wheel Created! Adjusted angle by " + (_this.segmentTheta * 0.5));
+            // 4. listen to signals
+            WheelOfFortune.Wheel.onSpinChange.add(_this.onSpinHandler);
             return _this;
         }
         GameWheel.prototype.update = function () {
             _super.prototype.update.call(this);
-            // debug
-            // console.log(this.currentValue());
+        };
+        GameWheel.prototype.onSpinHandler = function (spinState) {
+            console.log("signal received: " + spinState.toString());
         };
         /**
          * get current value at angle

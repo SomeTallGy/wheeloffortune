@@ -11,51 +11,58 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var WheelOfFortune;
 (function (WheelOfFortune) {
+    var SpinState;
+    (function (SpinState) {
+        SpinState[SpinState["Stopped"] = 0] = "Stopped";
+        SpinState[SpinState["Spinning"] = 1] = "Spinning";
+    })(SpinState = WheelOfFortune.SpinState || (WheelOfFortune.SpinState = {}));
     var Wheel = (function (_super) {
         __extends(Wheel, _super);
         // ######## constructor ########
         function Wheel(game, sprite) {
             var _this = _super.call(this, game) || this;
-            //static readonly DRAG: number          = 20;    // amount of degrees/second lost every second after spinning
             _this.rI = (Wheel.MASS * 0.5) * (Wheel.RADIUS * Wheel.RADIUS);
             _this.force = 0; // tangent force in newtons
             _this.torque = 0; // torque - angular work (force * r * sin(90))
             _this.angular_acceleration = 0; // angular acceleration (torque * rotational inertia)
             _this.angular_velocity = 0; // angular velocity (angular_acceleration * t(seconds))
+            _this.time_dilation = 1; // value in which physics intervals are scaled
             // bookkeeping attributes
-            _this.total_theta = 0; // how many radians has wheel spun;
-            _this.impulse_time = 0; // how long has impulse ran
-            _this.target_coasting_time = 0;
-            _this.actual_coasting_time = 0;
-            _this.time_dilation = 1;
-            // booleans
-            _this.isImpulsing = false; // are we impulsing?
+            _this.target_coasting_time = 0; // targeted coasting time after impulse
+            _this.actual_coasting_time = 0; // actual coasting time after impulse
             _this.wheelSprite = sprite;
             _this.add(sprite);
             return _this;
         }
+        Object.defineProperty(Wheel, "spinState", {
+            get: function () { return this._spinState; },
+            set: function (value) {
+                if (value == this.spinState)
+                    return;
+                this._spinState = value;
+                Wheel.onSpinChange.dispatch(value);
+            },
+            enumerable: true,
+            configurable: true
+        });
         Wheel.prototype.update = function () {
             // 1. update angular velocity
             this.updateAngularVelocity();
             // 2. update angle of wheel
             this.updateAngle();
-            // 3. bookkeeping
-            /*if(this.isImpulsing == true)
-             this.impulse_time += this.game.time.elapsed / 1000;*/
-            // debug
-            //console.log(this.angle % 360);
-            //console.log(this.angular_acceleration);
         };
+        /**
+         * Calculate and the angle of the wheel
+         */
         Wheel.prototype.updateAngle = function () {
-            //console.log(this.game.time.physicsElapsed);
+            // 1. Update the angle of the wheel
             var theta = this.angular_velocity * this.game.time.physicsElapsed;
             this.angle += Phaser.Math.radToDeg(theta);
+            // 2. Bookkeeping
             if (this.target_coasting_time != 0) {
                 if (this.angular_velocity > 0)
                     this.actual_coasting_time += this.game.time.physicsElapsed;
                 else {
-                    //console.log("actual time elapsed: "+this.actual_coasting_time);
-                    //console.log("difference in time "+(this.target_coasting_time - this.actual_coasting_time));
                     this.actual_coasting_time = 0;
                     this.target_coasting_time = 0;
                 }
@@ -63,8 +70,8 @@ var WheelOfFortune;
         };
         /**
          * Apply angular impulse to the wheel for t seconds
-         * @param n : tangent force in newtons
-         * @param t : for how long in seconds
+         * @param n tangent force in newtons
+         * @param t for how long in seconds
          */
         Wheel.prototype.applySpin = function (n, t) {
             var _this = this;
@@ -148,9 +155,9 @@ var WheelOfFortune;
                 }
                 c += i;
                 this.time_dilation = this.target_coasting_time / c;
+                // debug
                 console.log("dilate time by: " + this.time_dilation);
             }
-            //console.log("remaining degrees: "+ this.remainingDegreesAfterImpulse());
         };
         /**
          * Return the needed velocity to spin d degrees before stopping
@@ -176,10 +183,12 @@ var WheelOfFortune;
          * @param differenceTime : any difference in time that needs to be included in the quantity (for accuracy)
          */
         Wheel.prototype.updateAngularVelocity = function (override) {
+            // 1. override angular velocity?
             if (override != undefined) {
                 this.angular_velocity = override;
                 return;
             }
+            // 2. are we accelerating?
             if (this.angular_acceleration != 0)
                 this.angular_velocity += this.angular_acceleration * this.game.time.physicsElapsed;
             else {
@@ -194,21 +203,8 @@ var WheelOfFortune;
                     this.angular_velocity = 0;
                 }
             }
-        };
-        Wheel.prototype.remainingDegreesAfterImpulse = function () {
-            var degrees_total = 0;
-            var degrees_v = Phaser.Math.radToDeg(this.angular_velocity);
-            var s = 0;
-            while (degrees_v > 0) {
-                degrees_total += degrees_v;
-                degrees_v -= Wheel.DRAG;
-                s++;
-            }
-            console.log("will take " + s + " seconds to stop");
-            return degrees_total;
-        };
-        Wheel.prototype.degressDuringImpulse = function () {
-            return 0; // temp
+            // 4. update spin state
+            Wheel.spinState = (this.angular_velocity > 0) ? SpinState.Spinning : SpinState.Stopped;
         };
         return Wheel;
     }(Phaser.Group));
@@ -217,6 +213,8 @@ var WheelOfFortune;
     Wheel.RADIUS = 2; // radius in meters
     Wheel.IMPULSE_DEGREES = 45; // how many degrees of spin will impulse be applied to
     Wheel.DRAG = -0.5; // how much negative accelaration in radians / s^2
+    // states and signals
+    Wheel.onSpinChange = new Phaser.Signal();
     WheelOfFortune.Wheel = Wheel;
 })(WheelOfFortune || (WheelOfFortune = {}));
 //# sourceMappingURL=wheel.js.map

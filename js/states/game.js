@@ -58,14 +58,16 @@ var WheelOfFortune;
             this.game.add.existing(this.arrow);
             // 4. add a simple interaction to spin the wheel
             this.game.input.onDown.add(function () {
-                //(<GameWheel>this.wheel).landOnAngle(720);
-                _this.wheel.landOnAngle2(360);
-                //this.wheel.landOnAngle(180);
-                //this.wheel.velocityToReach(45);
-                //this.wheel.applySpin3(30);
-                //this.wheel.applySpin2(50);
-                //this.wheel.setVelocity(50);
-                //this.wheel.applySpin(50, 1);
+                if (WheelOfFortune.Wheel.spinState == WheelOfFortune.SpinState.Stopped) {
+                    //(<GameWheel>this.wheel).landOnAngle(720);
+                    _this.wheel.landOnAngle2(360);
+                    //this.wheel.landOnAngle(180);
+                    //this.wheel.velocityToReach(45);
+                    //this.wheel.applySpin3(30);
+                    //this.wheel.applySpin2(50);
+                    //this.wheel.setVelocity(50);
+                    //this.wheel.applySpin(50, 1);
+                }
             });
         };
         return Game;

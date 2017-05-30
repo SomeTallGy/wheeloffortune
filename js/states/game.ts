@@ -64,14 +64,16 @@ module WheelOfFortune{
 
             // 4. add a simple interaction to spin the wheel
             this.game.input.onDown.add(() => {
-                //(<GameWheel>this.wheel).landOnAngle(720);
-                (<GameWheel>this.wheel).landOnAngle2(360);
-                //this.wheel.landOnAngle(180);
-                //this.wheel.velocityToReach(45);
-                //this.wheel.applySpin3(30);
-                //this.wheel.applySpin2(50);
-                //this.wheel.setVelocity(50);
-                //this.wheel.applySpin(50, 1);
+                if(Wheel.spinState == SpinState.Stopped) {
+                    //(<GameWheel>this.wheel).landOnAngle(720);
+                    (<GameWheel>this.wheel).landOnAngle2(360);
+                    //this.wheel.landOnAngle(180);
+                    //this.wheel.velocityToReach(45);
+                    //this.wheel.applySpin3(30);
+                    //this.wheel.applySpin2(50);
+                    //this.wheel.setVelocity(50);
+                    //this.wheel.applySpin(50, 1);
+                }
             });
         }
 
