@@ -45,14 +45,22 @@ var WheelOfFortune;
             switch (value) {
                 case 0:
                     // bankrupt!
+                    this.backDrop.state = this.backDrop.bankruptState;
+                    this.gameScore.score = 0;
+                    this.gameScore.updateScore();
                     break;
                 case -1:
                     // lose turn!
+                    this.backDrop.state = this.backDrop.loseATurnState;
                     break;
                 case 5000:
                     // big win!
                     this.backDrop.state = this.backDrop.bigWinState;
+                    this.gameScore.score += value;
+                    this.gameScore.updateScore();
+                    break;
                 default:
+                    this.backDrop.state = this.backDrop.spinState;
                     this.gameScore.score += value;
                     this.gameScore.updateScore();
                     break;
@@ -75,6 +83,7 @@ var WheelOfFortune;
             this.gameScore = new WheelOfFortune.GameScore(this.game, this.game.width * 0.5, podium.top + 58);
             this.gameScore.anchor.setTo(0.5, 0.5);
             this.game.add.existing(this.gameScore);
+            this.gameScore.updateScore();
         };
         Game.prototype.createBackDrop = function () {
             this.backDrop = new WheelOfFortune.BackDrop(this.game);
@@ -110,8 +119,11 @@ var WheelOfFortune;
                     // 2. change game state
                     Game.state = GameState.Standby;
                     // 3. spin wheel
-                    //(<GameWheel>this.wheel).landOnAngle(720);
-                    _this.wheel.landOnAngle2(360);
+                    var gameWheel = _this.wheel;
+                    var force = 60 + (20 * Math.random());
+                    gameWheel.spinWithForce(force);
+                    console.log('spinning wheel with ' + force + " newtons of force");
+                    //gameWheel.spinToAngle(gameWheel.valueSegmentTheta(0)+360);
                     //this.wheel.landOnAngle(180);
                     //this.wheel.velocityToReach(45);
                     //this.wheel.applySpin3(30);

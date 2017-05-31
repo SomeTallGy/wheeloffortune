@@ -34,6 +34,12 @@ var WheelOfFortune;
                     return new WheelOfFortune.BigWinDropGraphic(this.group.game, this.group, ['bigWin']);
                 //this.map[type] = new BigWinDropGraphic(this.group.game, this.group, ['bigWin']);
                 //return this.getBackDropGraphic(type);
+                case BackDropGraphicType.Bankrupt:
+                    return new WheelOfFortune.BankruptDropGraphic(this.group.game, this.group, ['bankrupt']);
+                case BackDropGraphicType.Spinning:
+                    return new WheelOfFortune.ApplauseGraphic(this.group.game, this.group, ['applause']);
+                case BackDropGraphicType.LoseATurn:
+                    return new WheelOfFortune.LoseATurnGraphic(this.group.game, this.group, ['lose_a_turn']);
                 default:
                     return new WheelOfFortune.SpinBackDropGraphic(this.group.game, this.group, ['spin_bdg', 'spin_hl']);
             }

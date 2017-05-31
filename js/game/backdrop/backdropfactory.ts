@@ -44,11 +44,12 @@ module WheelOfFortune
                     return new BigWinDropGraphic(this.group.game, this.group, ['bigWin']);
                     //this.map[type] = new BigWinDropGraphic(this.group.game, this.group, ['bigWin']);
                     //return this.getBackDropGraphic(type);
-
-
-
-
-
+                case BackDropGraphicType.Bankrupt :
+                    return new BankruptDropGraphic(this.group.game, this.group, ['bankrupt']);
+                case BackDropGraphicType.Spinning :
+                    return new ApplauseGraphic(this.group.game, this.group, ['applause']);
+                case BackDropGraphicType.LoseATurn :
+                    return new LoseATurnGraphic(this.group.game, this.group, ['lose_a_turn']);
                 default:
                     return new SpinBackDropGraphic(this.group.game, this.group, ['spin_bdg','spin_hl']);
                     //this.map[type] = new SpinBackDropGraphic(this.group.game, this.group, ['spin_bdg','spin_hl']);

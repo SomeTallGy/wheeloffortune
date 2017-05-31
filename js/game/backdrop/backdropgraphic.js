@@ -34,7 +34,7 @@ var WheelOfFortune;
                 this.sprites[1].alpha = 0;
         };
         BackDropGraphic.prototype.show = function (callback) {
-            var tween = this.game.add.tween(this).from({ x: 0, y: 300 }, 800, Phaser.Easing.Cubic.Out, true);
+            var tween = this.game.add.tween(this).from({ x: 0, y: 300 }, 800, Phaser.Easing.Cubic.Out, true, 300);
             if (callback != undefined)
                 tween.onComplete.add(callback, this);
         };

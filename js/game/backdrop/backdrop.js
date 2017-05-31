@@ -32,7 +32,10 @@ var WheelOfFortune;
         });
         BackDrop.prototype.initStates = function () {
             this.spinState = new WheelOfFortune.BackDropSpinState(this);
+            this.spinningState = new WheelOfFortune.BackDropSpinningState(this);
             this.bigWinState = new WheelOfFortune.BackDropBigWinState(this);
+            this.bankruptState = new WheelOfFortune.BackDropBankruptState(this);
+            this.loseATurnState = new WheelOfFortune.BackDropLoseATurnState(this);
         };
         return BackDrop;
     }(Phaser.Group));

@@ -26,6 +26,7 @@ var WheelOfFortune;
         }
         GameScore.prototype.updateScore = function () {
             var _this = this;
+            console.log("add to score: " + (this.score - this.displayedScore.value));
             var tween = this.game.add.tween(this.displayedScore).to({ value: this.score }, 1000, Phaser.Easing.Cubic.Out, true);
             tween.onUpdateCallback(function () {
                 var n = Math.round(_this.displayedScore.value);

@@ -31,7 +31,7 @@ module WheelOfFortune
 
         public show(callback?:() => void)
         {
-            let tween = this.game.add.tween(this).from( {x: 0, y: 300}, 800, Phaser.Easing.Cubic.Out, true);
+            let tween = this.game.add.tween(this).from( {x: 0, y: 300}, 800, Phaser.Easing.Cubic.Out, true, 300);
             if(callback != undefined)
                 tween.onComplete.add(callback, this);
         }

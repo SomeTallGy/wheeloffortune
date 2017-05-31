@@ -12,6 +12,9 @@ module WheelOfFortune {
             this.game.load.image('spin_bdg', 'image/click_to_spin.png');
             this.game.load.image('spin_hl', 'image/click_to_spin_hl.png');
             this.game.load.image('bigWin', 'image/big_win.png');
+            this.game.load.image('applause', 'image/applause.png');
+            this.game.load.image('bankrupt', 'image/bankrupt.png');
+            this.game.load.image('lose_a_turn', 'image/lose_a_turn.png');
         }
 
         create() {

@@ -77,7 +77,7 @@ var WheelOfFortune;
          * @returns {number}
          */
         GameWheel.prototype.valueSegmentTheta = function (index) {
-            return (index * this.segmentTheta) + (this.segmentTheta * 0.5);
+            return index * this.segmentTheta + (this.segmentTheta * 0.5);
         };
         GameWheel.prototype.landOnAngle = function (d) {
             var w = this.velocityToReach(d);
@@ -85,11 +85,14 @@ var WheelOfFortune;
             this.setVelocity(w, t);
             console.log("should take " + t);
         };
-        GameWheel.prototype.landOnAngle2 = function (d) {
-            var orig_d = d;
+        GameWheel.prototype.spinToAngle = function (d) {
+            var orig_d = d - (this.angle % 360);
             d -= WheelOfFortune.Wheel.IMPULSE_DEGREES + (this.segmentTheta * 0.5);
             var w = this.velocityToReach(d);
             this.applySpin3(w, orig_d);
+        };
+        GameWheel.prototype.spinWithForce = function (n) {
+            this.applySpin2(n);
         };
         return GameWheel;
     }(WheelOfFortune.Wheel));

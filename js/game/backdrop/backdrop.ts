@@ -5,7 +5,10 @@ module WheelOfFortune
         public factory: BackDropFactory;
 
         public spinState:BackDropState;
+        public spinningState:BackDropState;
         public bigWinState:BackDropState;
+        public bankruptState:BackDropState;
+        public loseATurnState:BackDropState;
 
         private _state:BackDropState;
 
@@ -30,7 +33,11 @@ module WheelOfFortune
         public initStates()
         {
             this.spinState = new BackDropSpinState(this);
+            this.spinningState = new BackDropSpinningState(this);
             this.bigWinState = new BackDropBigWinState(this);
+            this.bankruptState = new BackDropBankruptState(this);
+            this.loseATurnState = new BackDropLoseATurnState(this);
+
         }
     }
 }

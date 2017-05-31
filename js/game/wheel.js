@@ -97,14 +97,14 @@ var WheelOfFortune;
             this.updateAngularAcceleration();
             var d_a = Phaser.Math.radToDeg(this.angular_acceleration);
             var t = Math.sqrt((Wheel.IMPULSE_DEGREES * 2) / d_a); // t = sqrt(2d / accel)
-            console.log("accelerating at " + d_a + " for " + t + " seconds until we reach " + Wheel.IMPULSE_DEGREES + " degrees.");
+            //console.log("accelerating at " + d_a + " for " + t + " seconds until we reach " + Wheel.IMPULSE_DEGREES + " degrees.");
             this.game.time.events.add(Phaser.Timer.SECOND * t, function () {
                 // 1. update angular velocity once more as this is happening before the update callback
                 _this.updateAngularVelocity();
                 // 2. nullify force and update acceleration
                 _this.force = 0;
                 _this.updateAngularAcceleration();
-                console.log("velocity after impulse is: " + _this.angular_velocity + " at angle: " + _this.angle);
+                //console.log("velocity after impulse is: " + this.angular_velocity + " at angle: " + this.angle);
             });
         };
         /**

@@ -26,7 +26,7 @@ var WheelOfFortune;
             this.game.add.tween(this).to({ x: this.shown.x, y: this.shown.y }, 800, Phaser.Easing.Cubic.Out, true);
         };
         Vanna.prototype.exit = function () {
-            this.game.add.tween(this).to({ x: this.hidden.x, y: this.hidden.y }, 1200, Phaser.Easing.Cubic.In, true);
+            this.game.add.tween(this).to({ x: this.hidden.x, y: this.hidden.y }, 700, Phaser.Easing.Cubic.In, true);
         };
         return Vanna;
     }(Phaser.Sprite));

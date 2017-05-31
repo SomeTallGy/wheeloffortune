@@ -45,7 +45,9 @@ var WheelOfFortune;
             var _this = this;
             if (spinState == WheelOfFortune.SpinState.Spinning) {
                 this.graphicShown.flash(function () {
-                    _this.graphicShown.hide();
+                    _this.graphicShown.hide(function () {
+                        _this.backdrop.state = _this.backdrop.spinningState;
+                    });
                 });
                 WheelOfFortune.Wheel.onSpinChange.remove(this.onSpinChange);
             }
@@ -53,6 +55,26 @@ var WheelOfFortune;
         return BackDropSpinState;
     }(BackDropState));
     WheelOfFortune.BackDropSpinState = BackDropSpinState;
+    ///////////////// Spinning State //////////////////
+    var BackDropSpinningState = (function (_super) {
+        __extends(BackDropSpinningState, _super);
+        function BackDropSpinningState(backdrop) {
+            return _super.call(this, backdrop) || this;
+        }
+        BackDropSpinningState.prototype.execute = function () {
+            this.graphicShown = this.backdrop.factory.getBackDropGraphic(WheelOfFortune.BackDropGraphicType.Spinning);
+            this.graphicShown.show();
+            WheelOfFortune.Wheel.onSpinChange.add(this.onSpinChange, this);
+        };
+        BackDropSpinningState.prototype.onSpinChange = function (spinState) {
+            if (spinState == WheelOfFortune.SpinState.Stopped) {
+                this.graphicShown.hide();
+                WheelOfFortune.Wheel.onSpinChange.remove(this.onSpinChange);
+            }
+        };
+        return BackDropSpinningState;
+    }(BackDropState));
+    WheelOfFortune.BackDropSpinningState = BackDropSpinningState;
     ///////////////// Big Win State //////////////////
     var BackDropBigWinState = (function (_super) {
         __extends(BackDropBigWinState, _super);
@@ -63,7 +85,7 @@ var WheelOfFortune;
             var _this = this;
             this.graphicShown = this.backdrop.factory.getBackDropGraphic(WheelOfFortune.BackDropGraphicType.BigWin);
             this.graphicShown.show();
-            this.backdrop.game.time.events.add(Phaser.Timer.SECOND * 1.5, function () {
+            this.backdrop.game.time.events.add(Phaser.Timer.SECOND * 2.3, function () {
                 _this.graphicShown.hide(function () {
                     _this.backdrop.state = _this.backdrop.spinState;
                 });
@@ -72,5 +94,51 @@ var WheelOfFortune;
         return BackDropBigWinState;
     }(BackDropState));
     WheelOfFortune.BackDropBigWinState = BackDropBigWinState;
+    ///////////////// Bankrupt State //////////////////
+    var BackDropBankruptState = (function (_super) {
+        __extends(BackDropBankruptState, _super);
+        function BackDropBankruptState(backdrop) {
+            return _super.call(this, backdrop) || this;
+        }
+        BackDropBankruptState.prototype.execute = function () {
+            var _this = this;
+            this.graphicShown = this.backdrop.factory.getBackDropGraphic(WheelOfFortune.BackDropGraphicType.Bankrupt);
+            this.graphicShown.show();
+            // hide vanna
+            this.backdrop.game.state.getCurrentState().vanna.exit();
+            this.backdrop.game.time.events.add(Phaser.Timer.SECOND * 2.3, function () {
+                _this.graphicShown.hide(function () {
+                    // show vanna
+                    _this.backdrop.game.state.getCurrentState().vanna.enter();
+                    _this.backdrop.state = _this.backdrop.spinState;
+                });
+            });
+        };
+        return BackDropBankruptState;
+    }(BackDropState));
+    WheelOfFortune.BackDropBankruptState = BackDropBankruptState;
+    ///////////////// Lose A Turn State //////////////////
+    var BackDropLoseATurnState = (function (_super) {
+        __extends(BackDropLoseATurnState, _super);
+        function BackDropLoseATurnState(backdrop) {
+            return _super.call(this, backdrop) || this;
+        }
+        BackDropLoseATurnState.prototype.execute = function () {
+            var _this = this;
+            this.graphicShown = this.backdrop.factory.getBackDropGraphic(WheelOfFortune.BackDropGraphicType.LoseATurn);
+            this.graphicShown.show();
+            // hide vanna
+            this.backdrop.game.state.getCurrentState().vanna.exit();
+            this.backdrop.game.time.events.add(Phaser.Timer.SECOND * 2.3, function () {
+                _this.graphicShown.hide(function () {
+                    // show vanna
+                    _this.backdrop.game.state.getCurrentState().vanna.enter();
+                    _this.backdrop.state = _this.backdrop.spinState;
+                });
+            });
+        };
+        return BackDropLoseATurnState;
+    }(BackDropState));
+    WheelOfFortune.BackDropLoseATurnState = BackDropLoseATurnState;
 })(WheelOfFortune || (WheelOfFortune = {}));
 //# sourceMappingURL=backdropstates.js.map

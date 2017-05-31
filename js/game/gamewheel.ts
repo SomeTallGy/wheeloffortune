@@ -79,7 +79,7 @@ module WheelOfFortune {
          * @returns {number}
          */
         public valueSegmentTheta(index: number): number {
-            return (index * this.segmentTheta) + (this.segmentTheta * 0.5);
+            return index * this.segmentTheta + (this.segmentTheta * 0.5);
         }
 
         public landOnAngle(d: number): void {
@@ -90,11 +90,16 @@ module WheelOfFortune {
             console.log("should take " + t);
         }
 
-        public landOnAngle2(d: number): void {
-            let orig_d = d;
+        public spinToAngle(d: number): void {
+            let orig_d = d - (this.angle % 360);
             d -= Wheel.IMPULSE_DEGREES + (this.segmentTheta * 0.5);
             let w = this.velocityToReach(d);
             this.applySpin3(w, orig_d);
+        }
+
+        public spinWithForce(n: number): void
+        {
+            this.applySpin2(n);
         }
 
     }

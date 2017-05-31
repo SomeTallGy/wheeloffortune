@@ -18,6 +18,7 @@ module WheelOfFortune{
 
         public updateScore(): void
         {
+            console.log("add to score: "+(this.score - this.displayedScore.value));
             let tween:Phaser.Tween = this.game.add.tween(this.displayedScore).to( {value:this.score}, 1000, Phaser.Easing.Cubic.Out, true);
             tween.onUpdateCallback(()=>{
                 let n:number = Math.round(this.displayedScore.value);

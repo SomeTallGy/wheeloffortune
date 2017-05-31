@@ -15,8 +15,8 @@ module WheelOfFortune{
         private wheelGroup: Phaser.Group;
         private wheel: Wheel;
         private arrow: Phaser.Sprite;
-        private vanna: Vanna;
 
+        public vanna: Vanna;
         public backDrop: BackDrop;
         public gameScore: GameScore;
 
@@ -53,14 +53,22 @@ module WheelOfFortune{
             {
                 case 0 :
                     // bankrupt!
+                    this.backDrop.state = this.backDrop.bankruptState;
+                    this.gameScore.score = 0;
+                    this.gameScore.updateScore();
                     break;
                 case -1 :
                     // lose turn!
+                    this.backDrop.state = this.backDrop.loseATurnState;
                     break;
                 case 5000 :
                     // big win!
                     this.backDrop.state = this.backDrop.bigWinState;
+                    this.gameScore.score += value;
+                    this.gameScore.updateScore();
+                    break;
                 default :
+                    this.backDrop.state = this.backDrop.spinState;
                     this.gameScore.score += value;
                     this.gameScore.updateScore();
                     break;
@@ -90,6 +98,8 @@ module WheelOfFortune{
             this.gameScore = new GameScore(this.game, this.game.width * 0.5, podium.top + 58);
             this.gameScore.anchor.setTo(0.5, 0.5);
             this.game.add.existing(this.gameScore);
+
+            this.gameScore.updateScore();
         }
 
         private createBackDrop()
@@ -129,6 +139,7 @@ module WheelOfFortune{
 
         private initUI()
         {
+
             this.game.input.onDown.add(() => {
                 if(Wheel.spinState == SpinState.Stopped && Game.state == GameState.Ready) {
 
@@ -139,9 +150,14 @@ module WheelOfFortune{
                     Game.state = GameState.Standby;
 
                     // 3. spin wheel
+                    let gameWheel = <GameWheel>this.wheel;
+                    let force = 60 + (20 * Math.random());
+                    gameWheel.spinWithForce(force);
 
-                    //(<GameWheel>this.wheel).landOnAngle(720);
-                    (<GameWheel>this.wheel).landOnAngle2(360);
+                    console.log('spinning wheel with '+force+" newtons of force");
+
+                    //gameWheel.spinToAngle(gameWheel.valueSegmentTheta(0)+360);
+
                     //this.wheel.landOnAngle(180);
                     //this.wheel.velocityToReach(45);
                     //this.wheel.applySpin3(30);

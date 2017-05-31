@@ -19,13 +19,33 @@ var WheelOfFortune;
         return SpinBackDropGraphic;
     }(WheelOfFortune.BackDropGraphic));
     WheelOfFortune.SpinBackDropGraphic = SpinBackDropGraphic;
+    var ApplauseGraphic = (function (_super) {
+        __extends(ApplauseGraphic, _super);
+        function ApplauseGraphic(game, group, spriteKeys) {
+            var _this = _super.call(this, game, group, spriteKeys) || this;
+            _this.sprites[0].y -= 70;
+            return _this;
+        }
+        ApplauseGraphic.prototype.show = function (callback) {
+            var tween = this.game.add.tween(this).from({ x: 0, y: -300 }, 800, Phaser.Easing.Cubic.Out, true);
+            if (callback != undefined)
+                tween.onComplete.add(callback, this);
+        };
+        ApplauseGraphic.prototype.hide = function (callback) {
+            var tween = this.game.add.tween(this).to({ x: 0, y: -300 }, 800, Phaser.Easing.Cubic.In, true);
+            if (callback != undefined)
+                tween.onComplete.add(callback, this);
+        };
+        return ApplauseGraphic;
+    }(WheelOfFortune.BackDropGraphic));
+    WheelOfFortune.ApplauseGraphic = ApplauseGraphic;
     var BigWinDropGraphic = (function (_super) {
         __extends(BigWinDropGraphic, _super);
         function BigWinDropGraphic(game, group, spriteKeys) {
             return _super.call(this, game, group, spriteKeys) || this;
         }
         BigWinDropGraphic.prototype.show = function (callback) {
-            var tween = this.game.add.tween(this.scale).from({ x: 0, y: 0 }, 800, Phaser.Easing.Cubic.Out, true);
+            var tween = this.game.add.tween(this.scale).from({ x: 0, y: 0 }, 800, Phaser.Easing.Cubic.Out, true, 800);
             if (callback != undefined)
                 tween.onComplete.add(callback, this);
         };
@@ -37,5 +57,41 @@ var WheelOfFortune;
         return BigWinDropGraphic;
     }(WheelOfFortune.BackDropGraphic));
     WheelOfFortune.BigWinDropGraphic = BigWinDropGraphic;
+    var BankruptDropGraphic = (function (_super) {
+        __extends(BankruptDropGraphic, _super);
+        function BankruptDropGraphic(game, group, spriteKeys) {
+            return _super.call(this, game, group, spriteKeys) || this;
+        }
+        BankruptDropGraphic.prototype.show = function (callback) {
+            var tween = this.game.add.tween(this).from({ x: 0, y: -500 }, 800, Phaser.Easing.Cubic.Out, true, 800);
+            if (callback != undefined)
+                tween.onComplete.add(callback, this);
+        };
+        BankruptDropGraphic.prototype.hide = function (callback) {
+            var tween = this.game.add.tween(this).to({ x: 0, y: 500 }, 800, Phaser.Easing.Cubic.In, true);
+            if (callback != undefined)
+                tween.onComplete.add(callback, this);
+        };
+        return BankruptDropGraphic;
+    }(WheelOfFortune.BackDropGraphic));
+    WheelOfFortune.BankruptDropGraphic = BankruptDropGraphic;
+    var LoseATurnGraphic = (function (_super) {
+        __extends(LoseATurnGraphic, _super);
+        function LoseATurnGraphic(game, group, spriteKeys) {
+            return _super.call(this, game, group, spriteKeys) || this;
+        }
+        LoseATurnGraphic.prototype.show = function (callback) {
+            var tween = this.game.add.tween(this).from({ x: 0, y: -500 }, 800, Phaser.Easing.Cubic.Out, true, 800);
+            if (callback != undefined)
+                tween.onComplete.add(callback, this);
+        };
+        LoseATurnGraphic.prototype.hide = function (callback) {
+            var tween = this.game.add.tween(this).to({ x: 0, y: 500 }, 800, Phaser.Easing.Cubic.In, true);
+            if (callback != undefined)
+                tween.onComplete.add(callback, this);
+        };
+        return LoseATurnGraphic;
+    }(WheelOfFortune.BackDropGraphic));
+    WheelOfFortune.LoseATurnGraphic = LoseATurnGraphic;
 })(WheelOfFortune || (WheelOfFortune = {}));
 //# sourceMappingURL=backdropgraphics.js.map

@@ -25,7 +25,7 @@ module WheelOfFortune
 
         public exit()
         {
-            this.game.add.tween(this).to( {x: this.hidden.x, y: this.hidden.y}, 1200, Phaser.Easing.Cubic.In, true);
+            this.game.add.tween(this).to( {x: this.hidden.x, y: this.hidden.y}, 700, Phaser.Easing.Cubic.In, true);
         }
     }
 }
