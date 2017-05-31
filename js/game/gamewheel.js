@@ -48,14 +48,22 @@ var WheelOfFortune;
             // 3. apply the opposite to the groups's angle for presentation
             _this.angle += _this.segmentTheta * 0.5;
             // 4. listen to signals
-            WheelOfFortune.Wheel.onSpinChange.add(_this.onSpinHandler);
+            _this.initListeners();
             return _this;
         }
         GameWheel.prototype.update = function () {
             _super.prototype.update.call(this);
         };
-        GameWheel.prototype.onSpinHandler = function (spinState) {
-            console.log("signal received: " + spinState.toString());
+        GameWheel.prototype.initListeners = function () {
+            var _this = this;
+            var game = this.game.state.getCurrentState();
+            WheelOfFortune.Wheel.onSpinChange.add(function (spinState) {
+                if (spinState == WheelOfFortune.SpinState.Stopped && game.hasStarted) {
+                    // 1. update score
+                    game.gameScore.newScore(_this.currentValue());
+                    // 2. update backdrop
+                }
+            });
         };
         /**
          * get current value at angle

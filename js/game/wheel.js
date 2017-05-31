@@ -189,8 +189,9 @@ var WheelOfFortune;
                 return;
             }
             // 2. are we accelerating?
-            if (this.angular_acceleration != 0)
+            if (this.angular_acceleration != 0) {
                 this.angular_velocity += this.angular_acceleration * this.game.time.physicsElapsed;
+            }
             else {
                 var drag = Math.abs(Wheel.DRAG * (this.game.time.physicsElapsed * this.time_dilation));
                 if (this.angular_velocity - drag > 0) {

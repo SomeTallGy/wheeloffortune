@@ -14,7 +14,10 @@ var WheelOfFortune;
     var Game = (function (_super) {
         __extends(Game, _super);
         function Game() {
-            return _super !== null && _super.apply(this, arguments) || this;
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            // booleans
+            _this.hasStarted = false;
+            return _this;
         }
         Game.prototype.create = function () {
             this.createBG();
@@ -34,9 +37,12 @@ var WheelOfFortune;
             this.vanna.enter();
         };
         Game.prototype.createUI = function () {
-            var podium = new Phaser.Sprite(this.game, this.game.width / 2, this.game.height, 'podium');
+            var podium = new Phaser.Sprite(this.game, this.game.width * 0.5, this.game.height, 'podium');
             podium.anchor.setTo(0.5, 1);
             this.game.add.existing(podium);
+            this.gameScore = new WheelOfFortune.GameScore(this.game, this.game.width * 0.5, podium.top + 58);
+            this.gameScore.anchor.setTo(0.5, 0.5);
+            this.game.add.existing(this.gameScore);
         };
         Game.prototype.createGameWheel = function () {
             var _this = this;
@@ -51,7 +57,7 @@ var WheelOfFortune;
             this.wheelGroup.centerY = this.game.height * 1.05;
             this.wheelGroup.scale.set(1.2, 1);
             // 2. create arrow
-            this.arrow = new Phaser.Sprite(this.game, this.game.width / 2, this.wheelGroup.top, 'arrow');
+            this.arrow = new Phaser.Sprite(this.game, this.game.width * 0.5, this.wheelGroup.top, 'arrow');
             this.arrow.anchor.setTo(0.5, 0.5);
             // 3. add assets to game
             this.game.add.existing(this.wheelGroup);
@@ -59,6 +65,9 @@ var WheelOfFortune;
             // 4. add a simple interaction to spin the wheel
             this.game.input.onDown.add(function () {
                 if (WheelOfFortune.Wheel.spinState == WheelOfFortune.SpinState.Stopped) {
+                    // 1. started!
+                    if (!_this.hasStarted)
+                        _this.hasStarted = true;
                     //(<GameWheel>this.wheel).landOnAngle(720);
                     _this.wheel.landOnAngle2(360);
                     //this.wheel.landOnAngle(180);

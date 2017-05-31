@@ -227,7 +227,9 @@ module WheelOfFortune {
 
             // 2. are we accelerating?
             if (this.angular_acceleration != 0)
+            {
                 this.angular_velocity += this.angular_acceleration * this.game.time.physicsElapsed;
+            }
 
             // 3. coast
             else {

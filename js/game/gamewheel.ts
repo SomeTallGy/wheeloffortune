@@ -46,16 +46,25 @@ module WheelOfFortune {
             this.angle += this.segmentTheta * 0.5;
 
             // 4. listen to signals
-            Wheel.onSpinChange.add(this.onSpinHandler);
+            this.initListeners();
         }
 
         update() {
             super.update();
         }
 
-        private onSpinHandler(spinState:SpinState): void
+        private initListeners()
         {
-            console.log("signal received: "+ spinState.toString());
+            let game:Game = <Game>this.game.state.getCurrentState();
+            Wheel.onSpinChange.add((spinState:SpinState) => {
+                if(spinState == SpinState.Stopped && game.hasStarted)
+                {
+                    // 1. update score
+                    game.gameScore.newScore(this.currentValue());
+
+                    // 2. update backdrop
+                }
+            });
         }
 
         /**

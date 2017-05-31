@@ -9,6 +9,11 @@ module WheelOfFortune{
         private arrow: Phaser.Sprite;
         private vanna: Vanna;
 
+        public gameScore: GameScore;
+
+        // booleans
+        public hasStarted: boolean = false;
+
         create()
         {
             this.createBG();
@@ -34,9 +39,13 @@ module WheelOfFortune{
 
         private createUI()
         {
-            let podium:Phaser.Sprite = new Phaser.Sprite(this.game, this.game.width / 2, this.game.height, 'podium');
+            let podium:Phaser.Sprite = new Phaser.Sprite(this.game, this.game.width * 0.5, this.game.height, 'podium');
             podium.anchor.setTo(0.5, 1);
             this.game.add.existing(podium);
+
+            this.gameScore = new GameScore(this.game, this.game.width * 0.5, podium.top + 58);
+            this.gameScore.anchor.setTo(0.5, 0.5);
+            this.game.add.existing(this.gameScore);
         }
 
         private createGameWheel()
@@ -55,7 +64,7 @@ module WheelOfFortune{
             this.wheelGroup.scale.set(1.2, 1);
 
             // 2. create arrow
-            this.arrow = new Phaser.Sprite(this.game, this.game.width / 2, this.wheelGroup.top, 'arrow');
+            this.arrow = new Phaser.Sprite(this.game, this.game.width * 0.5, this.wheelGroup.top, 'arrow');
             this.arrow.anchor.setTo(0.5, 0.5);
 
             // 3. add assets to game
@@ -65,6 +74,10 @@ module WheelOfFortune{
             // 4. add a simple interaction to spin the wheel
             this.game.input.onDown.add(() => {
                 if(Wheel.spinState == SpinState.Stopped) {
+
+                    // 1. started!
+                    if(!this.hasStarted) this.hasStarted = true;
+
                     //(<GameWheel>this.wheel).landOnAngle(720);
                     (<GameWheel>this.wheel).landOnAngle2(360);
                     //this.wheel.landOnAngle(180);
