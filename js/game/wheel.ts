@@ -154,8 +154,8 @@ module WheelOfFortune {
 
                 this.setVelocity(w, t);
 
-                console.log("traveled " + (this.angle - starting_angle) + " degrees out of " + target_d);
-                console.log("setting velocity to travel to make up remaining " + d);
+                //console.log("traveled " + (this.angle - starting_angle) + " degrees out of " + target_d);
+                //console.log("setting velocity to travel to make up remaining " + d);
             })
 
         }
@@ -186,7 +186,7 @@ module WheelOfFortune {
                 this.time_dilation = this.target_coasting_time / c;
 
                 // debug
-                console.log("dilate time by: " + this.time_dilation);
+                //console.log("dilate time by: " + this.time_dilation);
             }
         }
 

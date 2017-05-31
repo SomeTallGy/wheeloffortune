@@ -4,8 +4,7 @@ module WheelOfFortune{
 
     export enum GameState{
         Ready,
-        Standby,
-        Pause
+        Standby
     }
 
     export class Game extends Phaser.State
@@ -19,6 +18,7 @@ module WheelOfFortune{
         public vanna: Vanna;
         public backDrop: BackDrop;
         public gameScore: GameScore;
+        public debugCheat: DebugCheat;
 
         // backdrop states
 
@@ -38,7 +38,10 @@ module WheelOfFortune{
             // 2. init ui
             this.initUI();
 
-            // 2. start game
+            // 3. init debug
+            this.initDebug();
+
+            // 4. start game
             this.startGame();
         }
 
@@ -150,11 +153,25 @@ module WheelOfFortune{
                     Game.state = GameState.Standby;
 
                     // 3. spin wheel
-                    let gameWheel = <GameWheel>this.wheel;
-                    let force = 60 + (20 * Math.random());
-                    gameWheel.spinWithForce(force);
 
-                    console.log('spinning wheel with '+force+" newtons of force");
+                    if(this.debugCheat.text == "")
+                    {
+                        let gameWheel = <GameWheel>this.wheel;
+                        let force = 60 + (20 * Math.random());
+                        gameWheel.spinWithForce(force);
+
+                        console.log('spinning wheel with '+force+" newtons of force");
+                    }
+                    else
+                    {
+                        let gameWheel = <GameWheel>this.wheel;
+                        gameWheel.spinToAngle(gameWheel.valueSegmentTheta(this.debugCheat.cheatValue)+360);
+
+                        console.log('CHEAT: spinning wheel to '+(gameWheel.valueSegmentTheta(this.debugCheat.cheatValue)+360)+" degrees");
+
+                        this.debugCheat.text = "";
+                    }
+
 
                     //gameWheel.spinToAngle(gameWheel.valueSegmentTheta(0)+360);
 
@@ -167,6 +184,14 @@ module WheelOfFortune{
                 }
             });
         }
+
+        private initDebug()
+        {
+            this.debugCheat = new DebugCheat(this.game, this.game.width * 0.5, this.game.height - 20);
+            this.debugCheat.anchor.setTo(0.5, 0.5);
+            this.game.add.existing(this.debugCheat);
+        }
+
     }
 
 }

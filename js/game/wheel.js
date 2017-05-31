@@ -130,8 +130,8 @@ var WheelOfFortune;
                 var w = _this.velocityToReach(d);
                 var t = (2 * d) / w;
                 _this.setVelocity(w, t);
-                console.log("traveled " + (_this.angle - starting_angle) + " degrees out of " + target_d);
-                console.log("setting velocity to travel to make up remaining " + d);
+                //console.log("traveled " + (this.angle - starting_angle) + " degrees out of " + target_d);
+                //console.log("setting velocity to travel to make up remaining " + d);
             });
         };
         /**
@@ -156,7 +156,7 @@ var WheelOfFortune;
                 c += i;
                 this.time_dilation = this.target_coasting_time / c;
                 // debug
-                console.log("dilate time by: " + this.time_dilation);
+                //console.log("dilate time by: " + this.time_dilation);
             }
         };
         /**

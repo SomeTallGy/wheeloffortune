@@ -15,7 +15,6 @@ var WheelOfFortune;
     (function (GameState) {
         GameState[GameState["Ready"] = 0] = "Ready";
         GameState[GameState["Standby"] = 1] = "Standby";
-        GameState[GameState["Pause"] = 2] = "Pause";
     })(GameState = WheelOfFortune.GameState || (WheelOfFortune.GameState = {}));
     var Game = (function (_super) {
         __extends(Game, _super);
@@ -35,7 +34,9 @@ var WheelOfFortune;
             this.createGameWheel();
             // 2. init ui
             this.initUI();
-            // 2. start game
+            // 3. init debug
+            this.initDebug();
+            // 4. start game
             this.startGame();
         };
         Game.prototype.startGame = function () {
@@ -119,10 +120,18 @@ var WheelOfFortune;
                     // 2. change game state
                     Game.state = GameState.Standby;
                     // 3. spin wheel
-                    var gameWheel = _this.wheel;
-                    var force = 60 + (20 * Math.random());
-                    gameWheel.spinWithForce(force);
-                    console.log('spinning wheel with ' + force + " newtons of force");
+                    if (_this.debugCheat.text == "") {
+                        var gameWheel = _this.wheel;
+                        var force = 60 + (20 * Math.random());
+                        gameWheel.spinWithForce(force);
+                        console.log('spinning wheel with ' + force + " newtons of force");
+                    }
+                    else {
+                        var gameWheel = _this.wheel;
+                        gameWheel.spinToAngle(gameWheel.valueSegmentTheta(_this.debugCheat.cheatValue) + 360);
+                        console.log('CHEAT: spinning wheel to ' + (gameWheel.valueSegmentTheta(_this.debugCheat.cheatValue) + 360) + " degrees");
+                        _this.debugCheat.text = "";
+                    }
                     //gameWheel.spinToAngle(gameWheel.valueSegmentTheta(0)+360);
                     //this.wheel.landOnAngle(180);
                     //this.wheel.velocityToReach(45);
@@ -132,6 +141,11 @@ var WheelOfFortune;
                     //this.wheel.applySpin(50, 1);
                 }
             });
+        };
+        Game.prototype.initDebug = function () {
+            this.debugCheat = new WheelOfFortune.DebugCheat(this.game, this.game.width * 0.5, this.game.height - 20);
+            this.debugCheat.anchor.setTo(0.5, 0.5);
+            this.game.add.existing(this.debugCheat);
         };
         return Game;
     }(Phaser.State));
