@@ -24,6 +24,9 @@ var WheelOfFortune;
             this.game.load.image('logo', 'image/wof_logo.png');
             this.game.load.image('click_play', 'image/click_play.png');
             this.game.load.image('vanna', 'image/vanna-white.png');
+            this.game.load.image('spin_bdg', 'image/click_to_spin.png');
+            this.game.load.image('spin_hl', 'image/click_to_spin_hl.png');
+            this.game.load.image('bigWin', 'image/big_win.png');
         };
         Preloader.prototype.create = function () {
             this.initStates();

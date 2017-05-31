@@ -59,10 +59,8 @@ module WheelOfFortune {
             Wheel.onSpinChange.add((spinState:SpinState) => {
                 if(spinState == SpinState.Stopped && game.hasStarted)
                 {
-                    // 1. update score
-                    game.gameScore.newScore(this.currentValue());
-
-                    // 2. update backdrop
+                    // update score
+                    game.newScore(this.currentValue());
                 }
             });
         }

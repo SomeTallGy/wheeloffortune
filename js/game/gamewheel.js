@@ -59,9 +59,8 @@ var WheelOfFortune;
             var game = this.game.state.getCurrentState();
             WheelOfFortune.Wheel.onSpinChange.add(function (spinState) {
                 if (spinState == WheelOfFortune.SpinState.Stopped && game.hasStarted) {
-                    // 1. update score
-                    game.gameScore.newScore(_this.currentValue());
-                    // 2. update backdrop
+                    // update score
+                    game.newScore(_this.currentValue());
                 }
             });
         };

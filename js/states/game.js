@@ -11,20 +11,52 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var WheelOfFortune;
 (function (WheelOfFortune) {
+    var GameState;
+    (function (GameState) {
+        GameState[GameState["Ready"] = 0] = "Ready";
+        GameState[GameState["Standby"] = 1] = "Standby";
+        GameState[GameState["Pause"] = 2] = "Pause";
+    })(GameState = WheelOfFortune.GameState || (WheelOfFortune.GameState = {}));
     var Game = (function (_super) {
         __extends(Game, _super);
         function Game() {
             var _this = _super !== null && _super.apply(this, arguments) || this;
+            // backdrop states
             // booleans
             _this.hasStarted = false;
             return _this;
         }
         Game.prototype.create = function () {
+            // 1. build game
             this.createBG();
-            this.createUI();
+            this.createBackDrop();
+            this.createPodium();
             this.createVanna();
             this.createGameWheel();
-            // debug
+            // 2. init ui
+            this.initUI();
+            // 2. start game
+            this.startGame();
+        };
+        Game.prototype.startGame = function () {
+            this.backDrop.state = this.backDrop.spinState;
+        };
+        Game.prototype.newScore = function (value) {
+            switch (value) {
+                case 0:
+                    // bankrupt!
+                    break;
+                case -1:
+                    // lose turn!
+                    break;
+                case 5000:
+                    // big win!
+                    this.backDrop.state = this.backDrop.bigWinState;
+                default:
+                    this.gameScore.score += value;
+                    this.gameScore.updateScore();
+                    break;
+            }
         };
         Game.prototype.createBG = function () {
             var bg = new Phaser.Image(this.game, 0, 0, 'bg');
@@ -36,7 +68,7 @@ var WheelOfFortune;
             this.game.add.existing(this.vanna);
             this.vanna.enter();
         };
-        Game.prototype.createUI = function () {
+        Game.prototype.createPodium = function () {
             var podium = new Phaser.Sprite(this.game, this.game.width * 0.5, this.game.height, 'podium');
             podium.anchor.setTo(0.5, 1);
             this.game.add.existing(podium);
@@ -44,8 +76,13 @@ var WheelOfFortune;
             this.gameScore.anchor.setTo(0.5, 0.5);
             this.game.add.existing(this.gameScore);
         };
+        Game.prototype.createBackDrop = function () {
+            this.backDrop = new WheelOfFortune.BackDrop(this.game);
+            this.backDrop.centerX = this.game.width * 0.5;
+            this.backDrop.centerY = this.game.height * 0.24;
+            this.game.add.existing(this.backDrop);
+        };
         Game.prototype.createGameWheel = function () {
-            var _this = this;
             // 1. create a GameWheel
             var sprite = new Phaser.Sprite(this.game, 0, 0, 'wheel');
             sprite.anchor.setTo(0.5, 0.5);
@@ -62,12 +99,17 @@ var WheelOfFortune;
             // 3. add assets to game
             this.game.add.existing(this.wheelGroup);
             this.game.add.existing(this.arrow);
-            // 4. add a simple interaction to spin the wheel
+        };
+        Game.prototype.initUI = function () {
+            var _this = this;
             this.game.input.onDown.add(function () {
-                if (WheelOfFortune.Wheel.spinState == WheelOfFortune.SpinState.Stopped) {
-                    // 1. started!
+                if (WheelOfFortune.Wheel.spinState == WheelOfFortune.SpinState.Stopped && Game.state == GameState.Ready) {
+                    // 1. has started?
                     if (!_this.hasStarted)
                         _this.hasStarted = true;
+                    // 2. change game state
+                    Game.state = GameState.Standby;
+                    // 3. spin wheel
                     //(<GameWheel>this.wheel).landOnAngle(720);
                     _this.wheel.landOnAngle2(360);
                     //this.wheel.landOnAngle(180);
@@ -81,6 +123,7 @@ var WheelOfFortune;
         };
         return Game;
     }(Phaser.State));
+    Game.state = GameState.Standby;
     WheelOfFortune.Game = Game;
 })(WheelOfFortune || (WheelOfFortune = {}));
 //# sourceMappingURL=game.js.map

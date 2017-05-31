@@ -1,5 +1,6 @@
 "use strict";
 ///<reference path="../node_modules/@types/phaser/phaser.d.ts" />
+///<reference path="../node_modules/@types/pixi/pixi.d.ts" />
 var WheelOfFortune;
 (function (WheelOfFortune) {
     var WheelOfFortuneGame = (function () {
