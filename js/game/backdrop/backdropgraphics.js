@@ -23,7 +23,7 @@ var WheelOfFortune;
         __extends(ApplauseGraphic, _super);
         function ApplauseGraphic(game, group, spriteKeys) {
             var _this = _super.call(this, game, group, spriteKeys) || this;
-            _this.sprites[0].y -= 70;
+            _this.sprites[0].anchor.setTo(0.5, 0.86);
             return _this;
         }
         ApplauseGraphic.prototype.show = function (callback) {
@@ -68,7 +68,7 @@ var WheelOfFortune;
                 tween.onComplete.add(callback, this);
         };
         BankruptDropGraphic.prototype.hide = function (callback) {
-            var tween = this.game.add.tween(this).to({ x: 0, y: 500 }, 800, Phaser.Easing.Cubic.In, true);
+            var tween = this.game.add.tween(this).to({ x: 0, y: this.game.height }, 800, Phaser.Easing.Cubic.In, true);
             if (callback != undefined)
                 tween.onComplete.add(callback, this);
         };
@@ -86,7 +86,7 @@ var WheelOfFortune;
                 tween.onComplete.add(callback, this);
         };
         LoseATurnGraphic.prototype.hide = function (callback) {
-            var tween = this.game.add.tween(this).to({ x: 0, y: 500 }, 800, Phaser.Easing.Cubic.In, true);
+            var tween = this.game.add.tween(this).to({ x: 0, y: this.game.height }, 800, Phaser.Easing.Cubic.In, true);
             if (callback != undefined)
                 tween.onComplete.add(callback, this);
         };

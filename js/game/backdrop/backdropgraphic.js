@@ -26,6 +26,7 @@ var WheelOfFortune;
                 var key = spriteKeys_1[_i];
                 var sprite = new Phaser.Sprite(this.game, 0, 0, key);
                 sprite.anchor.setTo(0.5, 0.5);
+                sprite.scale.setTo(WheelOfFortune.Game.podium_scale, WheelOfFortune.Game.podium_scale);
                 this.add(sprite);
                 this.sprites.push(sprite);
             }
@@ -34,12 +35,12 @@ var WheelOfFortune;
                 this.sprites[1].alpha = 0;
         };
         BackDropGraphic.prototype.show = function (callback) {
-            var tween = this.game.add.tween(this).from({ x: 0, y: 300 }, 800, Phaser.Easing.Cubic.Out, true, 300);
+            var tween = this.game.add.tween(this).from({ x: 0, y: this.game.height }, 800, Phaser.Easing.Cubic.Out, true, 300);
             if (callback != undefined)
                 tween.onComplete.add(callback, this);
         };
         BackDropGraphic.prototype.hide = function (callback) {
-            var tween = this.game.add.tween(this).to({ x: 0, y: -300 }, 800, Phaser.Easing.Cubic.In, true);
+            var tween = this.game.add.tween(this).to({ x: 0, y: -this.group.height * 2 }, 800, Phaser.Easing.Cubic.In, true);
             if (callback != undefined)
                 tween.onComplete.add(callback, this);
         };

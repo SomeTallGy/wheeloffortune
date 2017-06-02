@@ -22,7 +22,7 @@ module WheelOfFortune{
             let tween:Phaser.Tween = this.game.add.tween(this.displayedScore).to( {value:this.score}, 1000, Phaser.Easing.Cubic.Out, true);
             tween.onUpdateCallback(()=>{
                 let n:number = Math.round(this.displayedScore.value);
-                this.text = this.numberWithCommas(n);
+                this.text = '$'+this.numberWithCommas(n);
             });
         }
 

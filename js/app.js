@@ -6,6 +6,7 @@ var WheelOfFortune;
     var WheelOfFortuneGame = (function () {
         function WheelOfFortuneGame() {
             this.game = new Phaser.Game(416, 740, Phaser.CANVAS, 'content', { create: this.create });
+            //this.game = new Phaser.Game("100%", "100%", Phaser.CANVAS, 'content', {create: this.create});  // for testing different dimensions
         }
         WheelOfFortuneGame.prototype.create = function () {
             this.game.state.add("Preloader", WheelOfFortune.Preloader, true);

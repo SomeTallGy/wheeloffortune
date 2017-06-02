@@ -30,7 +30,7 @@ var WheelOfFortune;
             var tween = this.game.add.tween(this.displayedScore).to({ value: this.score }, 1000, Phaser.Easing.Cubic.Out, true);
             tween.onUpdateCallback(function () {
                 var n = Math.round(_this.displayedScore.value);
-                _this.text = _this.numberWithCommas(n);
+                _this.text = '$' + _this.numberWithCommas(n);
             });
         };
         // Disclaimer :: I borrowed this Regex code from stack overflow -- i shalt not take credit for this awesome little gem!

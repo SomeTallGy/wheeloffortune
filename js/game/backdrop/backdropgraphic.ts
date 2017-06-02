@@ -19,6 +19,7 @@ module WheelOfFortune
             {
                 let sprite:Phaser.Sprite = new Phaser.Sprite(this.game, 0, 0, key);
                 sprite.anchor.setTo(0.5, 0.5);
+                sprite.scale.setTo(Game.podium_scale, Game.podium_scale);
                 this.add(sprite);
 
                 this.sprites.push(sprite);
@@ -31,14 +32,14 @@ module WheelOfFortune
 
         public show(callback?:() => void)
         {
-            let tween = this.game.add.tween(this).from( {x: 0, y: 300}, 800, Phaser.Easing.Cubic.Out, true, 300);
+            let tween = this.game.add.tween(this).from( {x: 0, y: this.game.height}, 800, Phaser.Easing.Cubic.Out, true, 300);
             if(callback != undefined)
                 tween.onComplete.add(callback, this);
         }
 
         public hide(callback?:() => void)
         {
-            let tween = this.game.add.tween(this).to( {x: 0, y: -300}, 800, Phaser.Easing.Cubic.In, true);
+            let tween = this.game.add.tween(this).to( {x: 0, y: -this.group.height * 2}, 800, Phaser.Easing.Cubic.In, true);
             if(callback != undefined)
                 tween.onComplete.add(callback, this);
         }

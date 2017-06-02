@@ -69,20 +69,29 @@ var WheelOfFortune;
         };
         Game.prototype.createBG = function () {
             var bg = new Phaser.Image(this.game, 0, 0, 'bg');
+            // stretch to fit screen dimensions
+            bg.scale.x /= bg.right / this.game.width;
+            bg.scale.y /= bg.bottom / this.game.height;
             this.game.add.existing(bg);
         };
         Game.prototype.createVanna = function () {
-            this.vanna = new WheelOfFortune.Vanna(this.game, this.game.width * 0.5, this.game.height * 0.35, 'vanna');
-            this.vanna.scale.setTo(0.8, 0.8);
+            this.vanna = new WheelOfFortune.Vanna(this.game, this.game.width * 0.5, this.podium.top - (90 * Game.podium_scale), 'vanna');
+            this.vanna.scale.setTo((0.8 * Game.podium_scale), (0.8 * Game.podium_scale));
             this.game.add.existing(this.vanna);
             this.vanna.enter();
         };
         Game.prototype.createPodium = function () {
-            var podium = new Phaser.Sprite(this.game, this.game.width * 0.5, this.game.height, 'podium');
-            podium.anchor.setTo(0.5, 1);
-            this.game.add.existing(podium);
-            this.gameScore = new WheelOfFortune.GameScore(this.game, this.game.width * 0.5, podium.top + 58);
+            this.podium = new Phaser.Sprite(this.game, this.game.width * 0.5, this.game.height, 'podium');
+            this.podium.anchor.setTo(0.5, 1);
+            // scale up the podium if required
+            if (this.podium.width < this.game.width) {
+                Game.podium_scale = this.game.width / this.podium.width;
+                this.podium.scale.setTo(Game.podium_scale, Game.podium_scale);
+            }
+            this.game.add.existing(this.podium);
+            this.gameScore = new WheelOfFortune.GameScore(this.game, this.game.width * 0.5, this.podium.top + (58 * Game.podium_scale));
             this.gameScore.anchor.setTo(0.5, 0.5);
+            this.gameScore.scale.setTo(Game.podium_scale);
             this.game.add.existing(this.gameScore);
             this.gameScore.updateScore();
         };
@@ -102,7 +111,7 @@ var WheelOfFortune;
             this.wheelGroup.add(this.wheel);
             this.wheelGroup.centerX = this.game.width * 0.5;
             this.wheelGroup.centerY = this.game.height * 1.05;
-            this.wheelGroup.scale.set(1.2, 1);
+            this.wheelGroup.scale.setTo(1.2 * Game.podium_scale, Game.podium_scale);
             // 2. create arrow
             this.arrow = new Phaser.Sprite(this.game, this.game.width * 0.5, this.wheelGroup.top, 'arrow');
             this.arrow.anchor.setTo(0.5, 0.5);
@@ -150,6 +159,8 @@ var WheelOfFortune;
         return Game;
     }(Phaser.State));
     Game.state = GameState.Standby;
+    // scaling values
+    Game.podium_scale = 1;
     WheelOfFortune.Game = Game;
 })(WheelOfFortune || (WheelOfFortune = {}));
 //# sourceMappingURL=game.js.map

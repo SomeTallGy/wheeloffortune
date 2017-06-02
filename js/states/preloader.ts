@@ -19,6 +19,7 @@ module WheelOfFortune {
 
         create() {
             this.initStates();
+            this.setScale();
 
             this.game.state.start("Game");
         }
@@ -29,7 +30,7 @@ module WheelOfFortune {
         }
 
         setScale() {
-
+            this.game.scale.scaleMode = Phaser.ScaleManager.NO_SCALE;
         }
     }
 }

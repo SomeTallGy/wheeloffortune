@@ -9,6 +9,7 @@ module WheelOfFortune{
 
         constructor() {
             this.game = new Phaser.Game(416, 740, Phaser.CANVAS, 'content', {create: this.create});
+            //this.game = new Phaser.Game("100%", "100%", Phaser.CANVAS, 'content', {create: this.create});  // for testing different dimensions
         }
 
         create() {

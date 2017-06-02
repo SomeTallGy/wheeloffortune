@@ -33,6 +33,7 @@ var WheelOfFortune;
         };
         Preloader.prototype.create = function () {
             this.initStates();
+            this.setScale();
             this.game.state.start("Game");
         };
         Preloader.prototype.initStates = function () {
@@ -40,6 +41,7 @@ var WheelOfFortune;
             this.game.state.add("Game", WheelOfFortune.Game);
         };
         Preloader.prototype.setScale = function () {
+            this.game.scale.scaleMode = Phaser.ScaleManager.NO_SCALE;
         };
         return Preloader;
     }(Phaser.State));
